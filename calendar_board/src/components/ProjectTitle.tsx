@@ -1,11 +1,13 @@
 import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
-import { projectTitleState } from "../recoil/atoms"; // 경로 수정
+import { projectTitleState } from "../recoil/atoms";
 
 const TitleContainer = styled.div`
-  text-align: center;
-  margin: 20px 0;
+  text-align: left;
+  margin: 20px 15%;
+  display: flex;
+  align-items: center;
 `;
 
 const TitleText = styled.h1`
@@ -13,6 +15,10 @@ const TitleText = styled.h1`
   font-weight: bold;
   cursor: pointer;
   display: inline-block;
+  margin: 0; /* 기본 마진 제거 */
+  padding: 5px 0;
+  line-height: 1;
+  min-width: 10px;
 `;
 
 const TitleInput = styled.input`
@@ -20,13 +26,16 @@ const TitleInput = styled.input`
   font-weight: bold;
   border: none;
   outline: none;
-  text-align: center;
   background: transparent;
-  width: 100%;
+  width: auto; /* 제목 길이에 맞게 조정 */
+  min-width: 10px;
+  padding: 5px 0;
+  box-sizing: border-box;
+  line-height: 1;
 `;
 
 const ProjectTitle: React.FC = () => {
-  const [title, setTitle] = useRecoilState<string>(projectTitleState); // 🛠 string 타입 지정
+  const [title, setTitle] = useRecoilState<string>(projectTitleState);
   const [isEditing, setIsEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -48,13 +57,13 @@ const ProjectTitle: React.FC = () => {
       {isEditing ? (
         <TitleInput
           ref={inputRef}
-          value={title || ""} // 🛠 title이 undefined일 경우 대비
+          value={title || ""}
           onChange={handleChange}
           onBlur={handleBlur}
           onKeyDown={(e) => e.key === "Enter" && handleBlur()}
         />
       ) : (
-        <TitleText onClick={handleEdit}>{title || "프로젝트 제목"}</TitleText> // 🛠 기본값 설정
+        <TitleText onClick={handleEdit}>{title || "프로젝트 제목"}</TitleText>
       )}
     </TitleContainer>
   );

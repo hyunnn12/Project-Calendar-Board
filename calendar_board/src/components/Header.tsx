@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const HeaderContainer = styled.header`
   display: flex;
@@ -63,27 +63,46 @@ const DropdownItem = styled.li`
 
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      setMenuOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <HeaderContainer>
       <Logo src="/Header/Vector.png" alt="Project Logo" />
-      <UserSection>
+      <UserSection ref={dropdownRef}>
         <img src="/Header/User.png" alt="User Avatar" width={45} height={45} />
         <UserName>지원자님</UserName>
         <DropdownButton onClick={() => setMenuOpen((prev) => !prev)}>
           ▼
         </DropdownButton>
-        {menuOpen && (
-          <DropdownMenu
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-          >
-            <DropdownItem>설정</DropdownItem>
-            <DropdownItem>로그아웃</DropdownItem>
-          </DropdownMenu>
-        )}
+        <AnimatePresence>
+          {menuOpen && (
+            <DropdownMenu
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <DropdownItem>설정</DropdownItem>
+              <DropdownItem>로그아웃</DropdownItem>
+            </DropdownMenu>
+          )}
+        </AnimatePresence>
       </UserSection>
     </HeaderContainer>
   );
