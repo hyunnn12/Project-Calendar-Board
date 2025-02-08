@@ -86,7 +86,7 @@ const Header: React.FC = () => {
       <Logo src="/Header/Vector.png" alt="Project Logo" />
       <UserSection ref={dropdownRef}>
         <img src="/Header/User.png" alt="User Avatar" width={45} height={45} />
-        <UserName>지원자님</UserName>
+        <UserName>강현 님</UserName>
         <DropdownButton onClick={() => setMenuOpen((prev) => !prev)}>
           ▼
         </DropdownButton>
