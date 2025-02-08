@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { RecoilRoot } from "recoil";
 import styled from "styled-components";
 import Header from "components/Header";
@@ -11,19 +11,22 @@ const MainContent = styled.div`
   padding: 20px;
 `;
 
+const defaultColumns = [
+  { title: "시작 전", cards: [] },
+  { title: "진행 중", cards: [] },
+  { title: "완료", cards: [] },
+];
+
 const App: React.FC = () => {
-  const [columns, setColumns] = useState<{ title: string; cards: string[] }[]>([
-    { title: "시작 전", cards: [] },
-    { title: "진행 중", cards: [] },
-    { title: "완료", cards: [] },
-  ]);
+  const [columns, setColumns] = useState(defaultColumns);
 
   const handleAddColumn = () => {
+    const existingCustomColumns = columns.slice(3);
     const newColumn = {
-      title: `칼럼 ${columns.length + 1}`,
+      title: `칼럼 ${existingCustomColumns.length + 1}`,
       cards: [],
     };
-    setColumns((prev) => [...prev, newColumn]);
+    setColumns([...defaultColumns, ...existingCustomColumns, newColumn]);
   };
 
   return (
